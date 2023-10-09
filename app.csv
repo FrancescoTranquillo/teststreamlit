@@ -1,0 +1,94 @@
+Reparto	Specialità/Area	Descrizione	Quantità	Importo unitario	Totale	Note	Categoria
+Ambulatori	Cardiologia	Ecocardigrafo	1	100.000 €	100.000 €	Completo di sonde cardio e TEE	Ecografi
+Ambulatori	Cardiologia	Holter (ECG/NIBP)	2	3.000 €	6.000 €		Holter (vari)
+Ambulatori	Cardiologia	Registratori Holter ECG	5	2.000 €	10.000 €		Holter (vari)
+Ambulatori	Cardiologia	Registratori Holter NIBP	5	2.000 €	10.000 €		Holter (vari)
+Ambulatori	Cardiologia	Elettrocardiografi	2	3.000 €	6.000 €		Elettrocardiografi
+Ambulatori	Cardiologia	Sistema disinfezione TEE	1	30.000 €	30.000 €		Sterilizzazione
+Ambulatori	Cardiologia - Premium	Ecocardiografo (3D)	0	150.000 €	0 €	Completo di sonde cardio e TEE 3D	Ecografi
+Ambulatori	Cardiologia - Premium	Sistema disinfezione TEE	0	30.000 €	0 €		Sterilizzazione
+Ambulatori	Cardiologia - Premium	Elettrocardiografi	0	3.000 €	0 €		Elettrocardiografi
+Ambulatori	Cardiologia - Cardiopolmonare	Sistema di test cardiopolmonare	0	40.000 €	0 €		Vari
+Ambulatori	Cardiologia - Cardiopolmonare	Ergometro Reclinabile	0	15.000 €	0 €		Vari
+Ambulatori	Cardiologia - Cardiopolmonare	Cicloergometro	0	4.000 €	0 €		Vari
+Ambulatori	Dermatologia	Videodermatoscopio	1	25.000 €	25.000 €		Dermatologia
+Ambulatori	Dermatologia	Dermatoscopio	2	1.000 €	2.000 €		Dermatologia
+Ambulatori	Dermatologia	Lampada Dermatologica	1	1.000 €	1.000 €		Dermatologia
+Ambulatori	Otorino - Base	Audiometro	1	4.000 €	4.000 €		ENT
+Ambulatori	Otorino - Base	Impedenziometro	1	6.000 €	6.000 €		ENT
+Ambulatori	Otorino - Base	Cabina Silente	1	8.000 €	8.000 €		ENT
+Ambulatori	Ecografia-multidisciplinare	Ecografo multidisciplinare	1	50.000 €	50.000 €	Completo di sonde lineari e convex	Ecografi
+Ambulatori	Ecografia-multidisciplinare	Ecografo multidisciplinare	1	70.000 €	70.000 €	Completo di sonde endocavitarie, lineari e convex	Ecografi
+Ambulatori	Oculistica	Riunito Oculistico	1	60.000 €	60.000 €	Completo di Lampada a fessura, autorefrattometro, autocheratometro, tonometro a soffio, pachimetro e ottotipo	Oculistica
+Ambulatori	Oculistica	Microscopio Endoteliale	1	25.000 €	25.000 €		Oculistica
+Ambulatori	Oculistica	Perimetro Automatico	1	30.000 €	30.000 €		Oculistica
+Ambulatori	Oculistica	Ecografo oftalmico	1	25.000 €	25.000 €		Oculistica
+Ambulatori	Oculistica	Biometro Ottico	1	35.000 €	35.000 €		Oculistica
+Ambulatori	Fisioterapia	TECAR	1	18.000 €	18.000 €		Fisioterapia
+Ambulatori	Fisioterapia	Ultrasuono/Elettro Terapia	1	5.000 €	5.000 €		Fisioterapia
+Ambulatori	Fisioterapia	Onde d'urto	1	30.000 €	30.000 €		Fisioterapia
+Ambulatori	Pneumologia	Spirometro	1	3.000 €	3.000 €		Pneumologia
+Ambulatori	Pneumologia	Cabina Pletismografica	1	20.000 €	20.000 €		Pneumologia
+Ambulatori	Chirurgia Bariatrica	Bio-impedenziometria	1	15.000 €	15.000 €		Bilance
+Ambulatori	Chirurgia Bariatrica	Polisonnografia	5	7.000 €	35.000 €		Neurofisiopatologia
+Ambulatori	Chirurgia Bariatrica	Elettrocardiografi	1	3.000 €	3.000 €		Elettrocardiografi
+Ambulatori	Gastroenterologia	Breath Test	1	3.000 €	3.000 €		Vari
+Ambulatori	Gastroenterologia	Sistema di manometria alta risoluzione	1	45.000 €	45.000 €		Vari
+Ambulatori	Gastroenterologia	Sistema di monitoraggio pH/Impedenza del reflusso	2	8.000 €	16.000 €		Vari
+Ambulatori	Varie - App. Standard	Frigorifero farmaci (>300L)	2	2.500 €	5.000 €		Frigoriferi e Congelatori
+Ambulatori	Varie - App. Standard	Bilancia pesapersone	6	1.000 €	6.000 €		Bilance
+Ambulatori	Varie - App. Standard	Lampada da visita	6	1.500 €	9.000 €		Vari
+Ambulatori	Varie - App. Standard	Poltrona da visita	12	1.500 €	18.000 €	Ad altezza variabile (elettrica)	Vari
+Ambulatori	Carrelli di emergenza	Defibrillatore	2	4.000 €	8.000 €	Manuale e semi-automatico con monitoraggio ECG	Defibrillatori
+Ambulatori	Carrelli di emergenza	Pulsossimetro	2	1.000 €	2.000 €		Vari
+Ambulatori	Carrelli di emergenza	Aspiratore portatile	2	1.000 €	2.000 €		Aspiratori
+Ambulatori	Medicina Estetica - Base	Laser Epilatorio	0	65.000 €	0 €		Laser
+Ambulatori	Medicina Estetica - Base	Laser CO2 con radiofrequenza	0	40.000 €	0 €		Laser
+Ambulatori	Medicina Estetica - Avanzato	Sistema di Rimodellamento Corporeo	0	45.000 €	0 €		Vari
+Ambulatori	Medicina Estetica - Avanzato	Fototerapia cosmetica	0	20.000 €	0 €		Vari
+Ambulatori	Medicina Estetica - Avanzato	Laser per trattamenti dermatologici	0	40.000 €	0 €		Laser
+Ambulatori	Medicina Estetica - Avanzato	Liposuzione non invasiva	0	20.000 €	0 €		Vari
+Ambulatori	Medicina Estetica - Avanzato	Sistema RF per trattamenti viso e corpo	0	25.000 €	0 €		Vari
+Ambulatori	Endocrinologia	Bio-impedenziometria	0	15.000 €	0 €		Bilance
+Ambulatori	Endocrinologia	Sistema di Calorimetria Indiretta	0	25.000 €	0 €		Sistemi di test metabolico
+Ambulatori	Otorino - Avanzata	Riunito di Otorino	0	35.000 €	0 €		ENT
+Ambulatori	Otorino - Avanzata	Colonna	0	30.000 €	0 €		Colonne (varie)
+Ambulatori	Otorino - Avanzata	Lavaendoscopi	0	20.000 €	0 €		Sterilizzazione
+Ambulatori	Otorino - Avanzata	Video rinolaringoscopi	0	15.000 €	0 €		Endoscopi
+Ambulatori	Neurofisiopatologia	Elettroencefalogramma	0	20.000 €	0 €		Vari
+Ambulatori	Neurofisiopatologia	Elettromiogramma	0	45.000 €	0 €	Completo di test potenziali evocati	Vari
+Ambulatori	Oculistica - Avanzata	Yag Laser	0	55.000 €	0 €		Laser
+Ambulatori	Oculistica - Avanzata	Laser Fotocoagulatore (Giallo)	0	60.000 €	0 €		Laser
+Ambulatori	Oculistica - Avanzata	OCT Segmento Anteriore	0	100.000 €	0 €		Oculistica
+Ambulatori	Oculistica - Avanzata	OCT Segmento Posteriore	0	120.000 €	0 €		Oculistica
+Ambulatori	Fisioterapia - Avanzata	Magnetoterapia	0	18.000 €	0 €		Fisioterapia
+Ambulatori	Fisioterapia - Avanzata	Yag Laser Terapeutico	0	10.000 €	0 €		Fisioterapia
+Ambulatori	Fisioterapia - Avanzata	Ossigeno-Ozono Terapia	0	15.000 €	0 €		Fisioterapia
+Ambulatori	Proctologia	Stimolazione pavimento pelvico	0	10.000 €	0 €		Vari
+Ambulatori	Proctologia	Ecografo	0	50.000 €	0 €	Completo di moduli procto e manometria anorettale	Ecografi
+Ambulatori	Proctologia	Sorgente luminosa per anoscopi	0	3.000 €	0 €		Vari
+Ambulatori	Proctologia	Lampada frontale	0	2.000 €	0 €		Vari
+Ambulatori	Proctologia	Aspiratore portatile	0	1.000 €	0 €		Aspiratori
+Ambulatori	Urologia - Base	Ecografo	0	60.000 €	0 €	Completo di sonde endocavitarie, lineari e convex	Ecografi
+Ambulatori	Urologia - Base	Sistema per Urodinamica	0	18.000 €	0 €		Vari
+Ambulatori	Urologia - Base	Uroflussimetro	0	2.000 €	0 €		Vari
+Endoscopia	Sala di Endoscopia	Colonna Endoscopica	1	50.000 €	50.000 €	Completa di videoprocessore HD e Monitor ≥ 30 pollici	Colonne (varie)
+Endoscopia	Sala di Endoscopia	Video Gastroscopio HD	2	20.000 €	40.000 €		Gastroscopi
+Endoscopia	Sala di Endoscopia	Video Gastroscopio HD - terapeutico	1	20.000 €	20.000 €		Gastroscopi
+Endoscopia	Sala di Endoscopia	Video Gastroscopio HD - Transnasale	1	20.000 €	20.000 €		Gastroscopi
+Endoscopia	Sala di Endoscopia	Video Colonscopio HD	2	20.000 €	40.000 €		Colonscopi
+Endoscopia	Sala di Endoscopia	Video Duodenoscopio HD	1	20.000 €	20.000 €		Endoscopi
+Endoscopia	Sala di Endoscopia	Pensile con scialitica	1	20.000 €	20.000 €		Pensili
+Endoscopia	Sala di Endoscopia	Tavolo operatorio	1	40.000 €	40.000 €	Completo di accessori	Tavoli Operatori
+Endoscopia	Sala di Endoscopia	Elettrobisturi ad Argon	1	25.000 €	25.000 €		Elettrobisturi
+Endoscopia	Sala di Endoscopia	Monitor Multiparametrico	1	6.000 €	6.000 €		Monitoraggio
+Endoscopia	Sala di Endoscopia	Ventilatore portatile	1	15.000 €	15.000 €		Anestesia e Ventilazione
+Endoscopia	Sala di Endoscopia	Aspiratore Portatile	1	1.500 €	1.500 €		Aspiratori
+Endoscopia	Sala di Endoscopia	Frigorifero farmaci (< 200 L )	1	1.500 €	1.500 €		Frigoriferi e Congelatori
+Endoscopia	Disinfezione	Lavaendoscopi a singola camera	2	50.000 €	100.000 €	Pass Through	Sterilizzazione
+Endoscopia	Disinfezione	Vasca di pre-lavaggio manuale	1	15.000 €	15.000 €		Sterilizzazione
+Endoscopia	Disinfezione	Sistema di lavaggio e stoccaggio endoscopi	1	25.000 €	25.000 €		Sterilizzazione
+Endoscopia	Sala di Urologia	Colonna Endoscopica	1	50.000 €	50.000 €	Completa di videoprocessore HD e Monitor ≥ 30 pollici	Colonne (varie)
+Endoscopia	Sala di Urologia	Video Cistoscopi flessibili	4	20.000 €	80.000 €		Cistoscopi
+Endoscopia	Sala di Urologia	Lavaendoscopi per cistoscopi	1	20.000 €	20.000 €		Sterilizzazione
+Endoscopia	Sala di Urologia	Ecografo	1	70.000 €	70.000 €	Completo di sonde endocavitaria, lineare e convex	Ecografi
