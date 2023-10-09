@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 # Carica i dati dal tuo dataset
-data = pd.read_csv("tuo_dataset.csv")  # Assicurati di inserire il percorso corretto al tuo dataset
+data = pd.read_csv("app.csv")  # Assicurati di inserire il percorso corretto al tuo dataset
 
 # Titolo dell'app
 st.title("Configuratore Apparecchiature Mediche")
