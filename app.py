@@ -1,36 +1,32 @@
+# Importa le librerie necessarie
 import streamlit as st
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
-# Set the title and sidebar layout of the app
-st.set_page_config(page_title="Excel Dashboard", layout="wide")
+# Titolo dell'app
+st.title("App di Streamlit per Visualizzare un Grafico")
 
-# Set the title of the app
-st.title("Excel Dashboard")
+# Descrizione dell'app
+st.write("Questo è un esempio di un'app di Streamlit che visualizza un grafico.")
 
-# Allow the user to upload a file
-uploaded_file = st.file_uploader("Upload your Excel file", type=["xlsx"])
+# Creazione di dati di esempio
+data = pd.DataFrame({
+    'x': np.arange(100),
+    'y': np.random.randn(100)
+})
 
-# If a file has been uploaded
-if uploaded_file is not None:
-    # Load the Excel file into a Pandas dataframe
-    df = pd.read_excel(uploaded_file, engine='openpyxl')
+# Opzione per visualizzare i dati
+if st.checkbox("Mostra i dati"):
+    st.write(data)
 
-    # Display the raw data
-    st.write("Raw Data")
-    st.write(df)
+# Opzione per visualizzare il grafico
+if st.checkbox("Mostra il grafico"):
+    # Creazione del grafico
+    fig, ax = plt.subplots()
+    ax.plot(data['x'], data['y'])
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    st.pyplot(fig)
 
-    # Display some basic statistics about the data
-    st.write("Basic Statistics")
-    st.write(df.describe())
-
-    # Display a bar chart of the data
-    st.write("Bar Chart")
-    st.bar_chart(df)
-
-    # Display a line chart of the data
-    st.write("Line Chart")
-    st.line_chart(df)
-
-    # Display an area chart of the data
-    st.write("Area Chart")
-    st.area_chart(df)
+# Aggiungere ulteriori funzionalità o grafici all'app secondo necessità
