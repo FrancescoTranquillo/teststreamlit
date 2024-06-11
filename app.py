@@ -5,28 +5,29 @@ import pandas as pd
 # Funzione per creare le tabelle
 def create_tables():
     try:
-        with sqlite3.connect('hospital.db') as conn:
-            c = conn.cursor()
-            c.execute('''
-                      CREATE TABLE IF NOT EXISTS departments
-                      (id TEXT PRIMARY KEY, name TEXT)
-                      ''')
-            c.execute('''
-                      CREATE TABLE IF NOT EXISTS units
-                      (id TEXT PRIMARY KEY, name TEXT, department_id TEXT,
-                      FOREIGN KEY(department_id) REFERENCES departments(id))
-                      ''')
-            c.execute('''
-                      CREATE TABLE IF NOT EXISTS specialties
-                      (id TEXT PRIMARY KEY, name TEXT, unit_id TEXT,
-                      FOREIGN KEY(unit_id) REFERENCES units(id))
-                      ''')
-            c.execute('''
-                      CREATE TABLE IF NOT EXISTS equipments
-                      (id TEXT PRIMARY KEY, name TEXT, specialty_id TEXT, price REAL, quantity INTEGER,
-                      FOREIGN KEY(specialty_id) REFERENCES specialties(id))
-                      ''')
-            conn.commit()
+        conn = sqlite3.connect('hospital.db')
+        c = conn.cursor()
+        c.execute('''
+                  CREATE TABLE IF NOT EXISTS departments
+                  (id TEXT PRIMARY KEY, name TEXT)
+                  ''')
+        c.execute('''
+                  CREATE TABLE IF NOT EXISTS units
+                  (id TEXT PRIMARY KEY, name TEXT, department_id TEXT,
+                  FOREIGN KEY(department_id) REFERENCES departments(id))
+                  ''')
+        c.execute('''
+                  CREATE TABLE IF NOT EXISTS specialties
+                  (id TEXT PRIMARY KEY, name TEXT, unit_id TEXT,
+                  FOREIGN KEY(unit_id) REFERENCES units(id))
+                  ''')
+        c.execute('''
+                  CREATE TABLE IF NOT EXISTS equipments
+                  (id TEXT PRIMARY KEY, name TEXT, specialty_id TEXT, price REAL, quantity INTEGER,
+                  FOREIGN KEY(specialty_id) REFERENCES specialties(id))
+                  ''')
+        conn.commit()
+        conn.close()
     except Exception as e:
         st.error(f"Errore nella creazione delle tabelle: {e}")
 
@@ -36,148 +37,168 @@ create_tables()
 # Funzioni per gestire le operazioni CRUD
 def add_department(id, name):
     try:
-        with sqlite3.connect('hospital.db') as conn:
-            c = conn.cursor()
-            c.execute('INSERT INTO departments (id, name) VALUES (?, ?)', (id, name))
-            conn.commit()
+        conn = sqlite3.connect('hospital.db')
+        c = conn.cursor()
+        c.execute('INSERT INTO departments (id, name) VALUES (?, ?)', (id, name))
+        conn.commit()
+        conn.close()
     except Exception as e:
         st.error(f"Errore nell'aggiunta del reparto: {e}")
 
 def add_unit(id, name, department_id):
     try:
-        with sqlite3.connect('hospital.db') as conn:
-            c = conn.cursor()
-            c.execute('INSERT INTO units (id, name, department_id) VALUES (?, ?, ?)', (id, name, department_id))
-            conn.commit()
+        conn = sqlite3.connect('hospital.db')
+        c = conn.cursor()
+        c.execute('INSERT INTO units (id, name, department_id) VALUES (?, ?, ?)', (id, name, department_id))
+        conn.commit()
+        conn.close()
     except Exception as e:
         st.error(f"Errore nell'aggiunta dell'unità operativa: {e}")
 
 def add_specialty(id, name, unit_id):
     try:
-        with sqlite3.connect('hospital.db') as conn:
-            c = conn.cursor()
-            c.execute('INSERT INTO specialties (id, name, unit_id) VALUES (?, ?, ?)', (id, name, unit_id))
-            conn.commit()
+        conn = sqlite3.connect('hospital.db')
+        c = conn.cursor()
+        c.execute('INSERT INTO specialties (id, name, unit_id) VALUES (?, ?, ?)', (id, name, unit_id))
+        conn.commit()
+        conn.close()
     except Exception as e:
         st.error(f"Errore nell'aggiunta della specialità: {e}")
 
 def add_equipment(id, name, specialty_id, price, quantity):
     try:
-        with sqlite3.connect('hospital.db') as conn:
-            c = conn.cursor()
-            c.execute('INSERT INTO equipments (id, name, specialty_id, price, quantity) VALUES (?, ?, ?, ?, ?)', (id, name, specialty_id, price, quantity))
-            conn.commit()
+        conn = sqlite3.connect('hospital.db')
+        c = conn.cursor()
+        c.execute('INSERT INTO equipments (id, name, specialty_id, price, quantity) VALUES (?, ?, ?, ?, ?)', (id, name, specialty_id, price, quantity))
+        conn.commit()
+        conn.close()
     except Exception as e:
         st.error(f"Errore nell'aggiunta dell'apparecchiatura: {e}")
 
 def update_department(id, name):
     try:
-        with sqlite3.connect('hospital.db') as conn:
-            c = conn.cursor()
-            c.execute('UPDATE departments SET name = ? WHERE id = ?', (name, id))
-            conn.commit()
+        conn = sqlite3.connect('hospital.db')
+        c = conn.cursor()
+        c.execute('UPDATE departments SET name = ? WHERE id = ?', (name, id))
+        conn.commit()
+        conn.close()
     except Exception as e:
         st.error(f"Errore nell'aggiornamento del reparto: {e}")
 
 def update_unit(id, name, department_id):
     try:
-        with sqlite3.connect('hospital.db') as conn:
-            c = conn.cursor()
-            c.execute('UPDATE units SET name = ?, department_id = ? WHERE id = ?', (name, department_id, id))
-            conn.commit()
+        conn = sqlite3.connect('hospital.db')
+        c = conn.cursor()
+        c.execute('UPDATE units SET name = ?, department_id = ? WHERE id = ?', (name, department_id, id))
+        conn.commit()
+        conn.close()
     except Exception as e:
         st.error(f"Errore nell'aggiornamento dell'unità operativa: {e}")
 
 def update_specialty(id, name, unit_id):
     try:
-        with sqlite3.connect('hospital.db') as conn:
-            c = conn.cursor()
-            c.execute('UPDATE specialties SET name = ?, unit_id = ? WHERE id = ?', (name, unit_id, id))
-            conn.commit()
+        conn = sqlite3.connect('hospital.db')
+        c = conn.cursor()
+        c.execute('UPDATE specialties SET name = ?, unit_id = ? WHERE id = ?', (name, unit_id, id))
+        conn.commit()
+        conn.close()
     except Exception as e:
         st.error(f"Errore nell'aggiornamento della specialità: {e}")
 
 def update_equipment(id, name, specialty_id, price, quantity):
     try:
-        with sqlite3.connect('hospital.db') as conn:
-            c = conn.cursor()
-            c.execute('UPDATE equipments SET name = ?, specialty_id = ?, price = ?, quantity = ? WHERE id = ?', (name, specialty_id, price, quantity, id))
-            conn.commit()
+        conn = sqlite3.connect('hospital.db')
+        c = conn.cursor()
+        c.execute('UPDATE equipments SET name = ?, specialty_id = ?, price = ?, quantity = ? WHERE id = ?', (name, specialty_id, price, quantity, id))
+        conn.commit()
+        conn.close()
     except Exception as e:
         st.error(f"Errore nell'aggiornamento dell'apparecchiatura: {e}")
 
 def delete_department(id):
     try:
-        with sqlite3.connect('hospital.db') as conn:
-            c = conn.cursor()
-            c.execute('DELETE FROM departments WHERE id = ?', (id,))
-            conn.commit()
+        conn = sqlite3.connect('hospital.db')
+        c = conn.cursor()
+        c.execute('DELETE FROM departments WHERE id = ?', (id,))
+        conn.commit()
+        conn.close()
     except Exception as e:
         st.error(f"Errore nell'eliminazione del reparto: {e}")
 
 def delete_unit(id):
     try:
-        with sqlite3.connect('hospital.db') as conn:
-            c = conn.cursor()
-            c.execute('DELETE FROM units WHERE id = ?', (id,))
-            conn.commit()
+        conn = sqlite3.connect('hospital.db')
+        c = conn.cursor()
+        c.execute('DELETE FROM units WHERE id = ?', (id,))
+        conn.commit()
+        conn.close()
     except Exception as e:
         st.error(f"Errore nell'eliminazione dell'unità operativa: {e}")
 
 def delete_specialty(id):
     try:
-        with sqlite3.connect('hospital.db') as conn:
-            c = conn.cursor()
-            c.execute('DELETE FROM specialties WHERE id = ?', (id,))
-            conn.commit()
+        conn = sqlite3.connect('hospital.db')
+        c = conn.cursor()
+        c.execute('DELETE FROM specialties WHERE id = ?', (id,))
+        conn.commit()
+        conn.close()
     except Exception as e:
         st.error(f"Errore nell'eliminazione della specialità: {e}")
 
 def delete_equipment(id):
     try:
-        with sqlite3.connect('hospital.db') as conn:
-            c = conn.cursor()
-            c.execute('DELETE FROM equipments WHERE id = ?', (id,))
-            conn.commit()
+        conn = sqlite3.connect('hospital.db')
+        c = conn.cursor()
+        c.execute('DELETE FROM equipments WHERE id = ?', (id,))
+        conn.commit()
+        conn.close()
     except Exception as e:
         st.error(f"Errore nell'eliminazione dell'apparecchiatura: {e}")
 
 def get_departments():
     try:
-        with sqlite3.connect('hospital.db') as conn:
-            c = conn.cursor()
-            c.execute('SELECT * FROM departments')
-            return c.fetchall()
+        conn = sqlite3.connect('hospital.db')
+        c = conn.cursor()
+        c.execute('SELECT * FROM departments')
+        result = c.fetchall()
+        conn.close()
+        return result
     except Exception as e:
         st.error(f"Errore nel recupero dei reparti: {e}")
         return []
 
 def get_units():
     try:
-        with sqlite3.connect('hospital.db') as conn:
-            c = conn.cursor()
-            c.execute('SELECT * FROM units')
-            return c.fetchall()
+        conn = sqlite3.connect('hospital.db')
+        c = conn.cursor()
+        c.execute('SELECT * FROM units')
+        result = c.fetchall()
+        conn.close()
+        return result
     except Exception as e:
         st.error(f"Errore nel recupero delle unità operative: {e}")
         return []
 
 def get_specialties():
     try:
-        with sqlite3.connect('hospital.db') as conn:
-            c = conn.cursor()
-            c.execute('SELECT * FROM specialties')
-            return c.fetchall()
+        conn = sqlite3.connect('hospital.db')
+        c = conn.cursor()
+        c.execute('SELECT * FROM specialties')
+        result = c.fetchall()
+        conn.close()
+        return result
     except Exception as e:
         st.error(f"Errore nel recupero delle specialità: {e}")
         return []
 
 def get_equipments():
     try:
-        with sqlite3.connect('hospital.db') as conn:
-            c = conn.cursor()
-            c.execute('SELECT * FROM equipments')
-            return c.fetchall()
+        conn = sqlite3.connect('hospital.db')
+        c = conn.cursor()
+        c.execute('SELECT * FROM equipments')
+        result = c.fetchall()
+        conn.close()
+        return result
     except Exception as e:
         st.error(f"Errore nel recupero delle apparecchiature: {e}")
         return []
