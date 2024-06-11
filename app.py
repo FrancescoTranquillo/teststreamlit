@@ -2,100 +2,130 @@ import streamlit as st
 import sqlite3
 import pandas as pd
 
-# Database setup
-conn = sqlite3.connect('hospital.db')
-c = conn.cursor()
+# Funzione per creare le tabelle
+def create_tables():
+    with sqlite3.connect('hospital.db') as conn:
+        c = conn.cursor()
+        c.execute('''
+                  CREATE TABLE IF NOT EXISTS departments
+                  (id TEXT PRIMARY KEY, name TEXT)
+                  ''')
+        c.execute('''
+                  CREATE TABLE IF NOT EXISTS units
+                  (id TEXT PRIMARY KEY, name TEXT, department_id TEXT,
+                  FOREIGN KEY(department_id) REFERENCES departments(id))
+                  ''')
+        c.execute('''
+                  CREATE TABLE IF NOT EXISTS specialties
+                  (id TEXT PRIMARY KEY, name TEXT, unit_id TEXT,
+                  FOREIGN KEY(unit_id) REFERENCES units(id))
+                  ''')
+        c.execute('''
+                  CREATE TABLE IF NOT EXISTS equipments
+                  (id TEXT PRIMARY KEY, name TEXT, specialty_id TEXT, price REAL, quantity INTEGER,
+                  FOREIGN KEY(specialty_id) REFERENCES specialties(id))
+                  ''')
+        conn.commit()
 
-# Create tables if they don't exist
-c.execute('''
-          CREATE TABLE IF NOT EXISTS departments
-          (id TEXT PRIMARY KEY, name TEXT)
-          ''')
+# Esegui la funzione per creare le tabelle all'avvio dell'app
+create_tables()
 
-c.execute('''
-          CREATE TABLE IF NOT EXISTS units
-          (id TEXT PRIMARY KEY, name TEXT, department_id TEXT,
-          FOREIGN KEY(department_id) REFERENCES departments(id))
-          ''')
-
-c.execute('''
-          CREATE TABLE IF NOT EXISTS specialties
-          (id TEXT PRIMARY KEY, name TEXT, unit_id TEXT,
-          FOREIGN KEY(unit_id) REFERENCES units(id))
-          ''')
-
-c.execute('''
-          CREATE TABLE IF NOT EXISTS equipments
-          (id TEXT PRIMARY KEY, name TEXT, specialty_id TEXT, price REAL, quantity INTEGER,
-          FOREIGN KEY(specialty_id) REFERENCES specialties(id))
-          ''')
-
-conn.commit()
-
-# Functions to manage CRUD operations
+# Funzioni per gestire le operazioni CRUD
 def add_department(id, name):
-    c.execute('INSERT INTO departments (id, name) VALUES (?, ?)', (id, name))
-    conn.commit()
+    with sqlite3.connect('hospital.db') as conn:
+        c = conn.cursor()
+        c.execute('INSERT INTO departments (id, name) VALUES (?, ?)', (id, name))
+        conn.commit()
 
 def add_unit(id, name, department_id):
-    c.execute('INSERT INTO units (id, name, department_id) VALUES (?, ?, ?)', (id, name, department_id))
-    conn.commit()
+    with sqlite3.connect('hospital.db') as conn:
+        c = conn.cursor()
+        c.execute('INSERT INTO units (id, name, department_id) VALUES (?, ?, ?)', (id, name, department_id))
+        conn.commit()
 
 def add_specialty(id, name, unit_id):
-    c.execute('INSERT INTO specialties (id, name, unit_id) VALUES (?, ?, ?)', (id, name, unit_id))
-    conn.commit()
+    with sqlite3.connect('hospital.db') as conn:
+        c = conn.cursor()
+        c.execute('INSERT INTO specialties (id, name, unit_id) VALUES (?, ?, ?)', (id, name, unit_id))
+        conn.commit()
 
 def add_equipment(id, name, specialty_id, price, quantity):
-    c.execute('INSERT INTO equipments (id, name, specialty_id, price, quantity) VALUES (?, ?, ?, ?, ?)', (id, name, specialty_id, price, quantity))
-    conn.commit()
+    with sqlite3.connect('hospital.db') as conn:
+        c = conn.cursor()
+        c.execute('INSERT INTO equipments (id, name, specialty_id, price, quantity) VALUES (?, ?, ?, ?, ?)', (id, name, specialty_id, price, quantity))
+        conn.commit()
 
 def update_department(id, name):
-    c.execute('UPDATE departments SET name = ? WHERE id = ?', (name, id))
-    conn.commit()
+    with sqlite3.connect('hospital.db') as conn:
+        c = conn.cursor()
+        c.execute('UPDATE departments SET name = ? WHERE id = ?', (name, id))
+        conn.commit()
 
 def update_unit(id, name, department_id):
-    c.execute('UPDATE units SET name = ?, department_id = ? WHERE id = ?', (name, department_id, id))
-    conn.commit()
+    with sqlite3.connect('hospital.db') as conn:
+        c = conn.cursor()
+        c.execute('UPDATE units SET name = ?, department_id = ? WHERE id = ?', (name, department_id, id))
+        conn.commit()
 
 def update_specialty(id, name, unit_id):
-    c.execute('UPDATE specialties SET name = ?, unit_id = ? WHERE id = ?', (name, unit_id, id))
-    conn.commit()
+    with sqlite3.connect('hospital.db') as conn:
+        c = conn.cursor()
+        c.execute('UPDATE specialties SET name = ?, unit_id = ? WHERE id = ?', (name, unit_id, id))
+        conn.commit()
 
 def update_equipment(id, name, specialty_id, price, quantity):
-    c.execute('UPDATE equipments SET name = ?, specialty_id = ?, price = ?, quantity = ? WHERE id = ?', (name, specialty_id, price, quantity, id))
-    conn.commit()
+    with sqlite3.connect('hospital.db') as conn:
+        c = conn.cursor()
+        c.execute('UPDATE equipments SET name = ?, specialty_id = ?, price = ?, quantity = ? WHERE id = ?', (name, specialty_id, price, quantity, id))
+        conn.commit()
 
 def delete_department(id):
-    c.execute('DELETE FROM departments WHERE id = ?', (id,))
-    conn.commit()
+    with sqlite3.connect('hospital.db') as conn:
+        c = conn.cursor()
+        c.execute('DELETE FROM departments WHERE id = ?', (id,))
+        conn.commit()
 
 def delete_unit(id):
-    c.execute('DELETE FROM units WHERE id = ?', (id,))
-    conn.commit()
+    with sqlite3.connect('hospital.db') as conn:
+        c = conn.cursor()
+        c.execute('DELETE FROM units WHERE id = ?', (id,))
+        conn.commit()
 
 def delete_specialty(id):
-    c.execute('DELETE FROM specialties WHERE id = ?', (id,))
-    conn.commit()
+    with sqlite3.connect('hospital.db') as conn:
+        c = conn.cursor()
+        c.execute('DELETE FROM specialties WHERE id = ?', (id,))
+        conn.commit()
 
 def delete_equipment(id):
-    c.execute('DELETE FROM equipments WHERE id = ?', (id,))
-    conn.commit()
+    with sqlite3.connect('hospital.db') as conn:
+        c = conn.cursor()
+        c.execute('DELETE FROM equipments WHERE id = ?', (id,))
+        conn.commit()
 
 def get_departments():
-    c.execute('SELECT * FROM departments')
-    return c.fetchall()
+    with sqlite3.connect('hospital.db') as conn:
+        c = conn.cursor()
+        c.execute('SELECT * FROM departments')
+        return c.fetchall()
 
 def get_units():
-    c.execute('SELECT * FROM units')
-    return c.fetchall()
+    with sqlite3.connect('hospital.db') as conn:
+        c = conn.cursor()
+        c.execute('SELECT * FROM units')
+        return c.fetchall()
 
 def get_specialties():
-    c.execute('SELECT * FROM specialties')
-    return c.fetchall()
+    with sqlite3.connect('hospital.db') as conn:
+        c = conn.cursor()
+        c.execute('SELECT * FROM specialties')
+        return c.fetchall()
 
 def get_equipments():
-    c.execute('SELECT * FROM equipments')
-    return c.fetchall()
+    with sqlite3.connect('hospital.db') as conn:
+        c = conn.cursor()
+        c.execute('SELECT * FROM equipments')
+        return c.fetchall()
 
 def main():
     st.title("Gestione Ospedale")
