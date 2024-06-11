@@ -1,87 +1,100 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
-from collections import defaultdict
 
-# Carica i dati dal tuo dataset
-uploaded_file = st.file_uploader("Choose a file")
-data = pd.read_csv(uploaded_file, sep=';')
-data["Totale"] = data["Totale"].str.replace("€", "").str.replace(".", "").astype(float)
+# Strutture dati in-memory
+hospitals = {}
+departments = {}
+units = {}
+specialties = {}
+equipments = {}
 
-# Crea una colonna vuota per le quantità personalizzate
-data["Quantità personalizzate"] = 0
+# Funzione principale
+def main():
+    st.title("Gestione Ospedale")
+    menu = ["Home", "Reparti", "Unità Operative", "Specialità", "Apparecchiature"]
+    choice = st.sidebar.selectbox("Menu", menu)
 
-# Titolo dell'app
-st.title("Configuratore GSD Tecnologie Medicali")
+    if choice == "Home":
+        st.subheader("Home")
+        st.write("Benvenuto nel sistema di gestione dell'ospedale.")
+    
+    elif choice == "Reparti":
+        manage_departments()
+    
+    elif choice == "Unità Operative":
+        manage_units()
+    
+    elif choice == "Specialità":
+        manage_specialties()
+    
+    elif choice == "Apparecchiature":
+        manage_equipments()
 
-# Seleziona i reparti e il numero desiderato
-reparti_selezionati = st.multiselect("Seleziona i reparti desiderati:", data["Reparto"].unique())
-numero_reparti = st.slider("Numero di reparti:", min_value=1, max_value=10, value=1)
+def manage_departments():
+    st.subheader("Gestione Reparti")
+    with st.form(key='department_form'):
+        dept_id = st.text_input("ID Reparto")
+        dept_name = st.text_input("Nome Reparto")
+        submit_button = st.form_submit_button(label='Salva Reparto')
 
-# Crea un dizionario per le specialità selezionate per ciascun reparto
-specialita_per_reparto = {}
-for reparto in reparti_selezionati:
-    specialita_selezionate = st.multiselect(f"Seleziona le specialità per il reparto '{reparto}':", data[data["Reparto"] == reparto]["Specialità/Area"].unique())
-    specialita_per_reparto[reparto] = specialita_selezionate
+    if submit_button:
+        departments[dept_id] = dept_name
+        st.success(f"Reparto {dept_name} aggiunto con successo")
 
-# Filtra i dati in base ai reparti e alle specialità selezionate
-data_filtrati = data[(data["Reparto"].isin(reparti_selezionati)) & (data["Specialità/Area"].isin(specialita_per_reparto[reparto] for reparto in specialita_per_reparto))].copy()
+    if departments:
+        st.subheader("Elenco Reparti")
+        for dept_id, dept_name in departments.items():
+            st.write(f"ID: {dept_id} - Nome: {dept_name}")
 
-# Crea una tabella con l'elenco delle apparecchiature e campi di input per le quantità personalizzate
-st.write(f"Elenco delle apparecchiature per {numero_reparti} reparti selezionati:")
-for index, row in data_filtrati.iterrows():
-    quantita_personalizzata = st.number_input(f"Quantità per {row['Descrizione']}:", value=0)
-    data_filtrati.at[index, "Quantità personalizzate"] = quantita_personalizzata
+def manage_units():
+    st.subheader("Gestione Unità Operative")
+    with st.form(key='unit_form'):
+        unit_id = st.text_input("ID Unità Operativa")
+        unit_name = st.text_input("Nome Unità Operativa")
+        dept_id = st.selectbox("Seleziona Reparto", list(departments.keys()))
+        submit_button = st.form_submit_button(label='Salva Unità Operativa')
 
-# Calcola il totale economico basato sulle quantità personalizzate
-totale_economico = (data_filtrati["Quantità personalizzate"] * data_filtrati["Totale"]).sum()
+    if submit_button:
+        units[unit_id] = {"name": unit_name, "department": dept_id}
+        st.success(f"Unità Operativa {unit_name} aggiunta con successo")
 
-# Raggruppa le apparecchiature per categoria e calcola le somme
-categorie_apparecchiature = defaultdict(int)
-for index, row in data_filtrati.iterrows():
-    categoria = row["Categoria"]
-    quantita = row["Quantità personalizzate"]
-    totale = row["Totale"]
-    categorie_apparecchiature[categoria] += quantita
+    if units:
+        st.subheader("Elenco Unità Operative")
+        for unit_id, unit_info in units.items():
+            st.write(f"ID: {unit_id} - Nome: {unit_info['name']} - Reparto: {departments[unit_info['department']]}")
 
-# Raggruppa l'elenco tecnico per categoria
-elenco_apparecchiature_tecniche = defaultdict(list)
-for index, row in data_filtrati.iterrows():
-    categoria = row["Categoria"]
-    descrizione = row["Descrizione"]
-    elenco_apparecchiature_tecniche[categoria].append(descrizione)
+def manage_specialties():
+    st.subheader("Gestione Specialità")
+    with st.form(key='specialty_form'):
+        spec_id = st.text_input("ID Specialità")
+        spec_name = st.text_input("Nome Specialità")
+        unit_id = st.selectbox("Seleziona Unità Operativa", list(units.keys()))
+        submit_button = st.form_submit_button(label='Salva Specialità')
 
-# Visualizza il riassunto delle apparecchiature per categoria
-st.write("Riassunto delle apparecchiature per categoria:")
-for categoria, quantita in categorie_apparecchiature.items():
-    st.write(f"- {categoria}: Quantità totale: {quantita}, Totale Economico: € {quantita * totale_economico:.0f}")
+    if submit_button:
+        specialties[spec_id] = {"name": spec_name, "unit": unit_id}
+        st.success(f"Specialità {spec_name} aggiunta con successo")
 
-# Visualizza il totale economico
-st.write(f"Totale Economico: € {totale_economico:.0f}")
+    if specialties:
+        st.subheader("Elenco Specialità")
+        for spec_id, spec_info in specialties.items():
+            st.write(f"ID: {spec_id} - Nome: {spec_info['name']} - Unità Operativa: {units[spec_info['unit']]['name']}")
 
-# Visualizza l'elenco tecnico raggruppato per categoria
-st.write("Elenco delle apparecchiature tecniche:")
-for categoria, elenco in elenco_apparecchiature_tecniche.items():
-    st.write(f"- {categoria}:")
-    for apparecchiatura in elenco:
-        st.write(f"  - {apparecchiatura}")
+def manage_equipments():
+    st.subheader("Gestione Apparecchiature")
+    with st.form(key='equipment_form'):
+        equip_id = st.text_input("ID Apparecchiatura")
+        equip_name = st.text_input("Nome Apparecchiatura")
+        spec_id = st.selectbox("Seleziona Specialità", list(specialties.keys()))
+        submit_button = st.form_submit_button(label='Salva Apparecchiatura')
 
-# Salvataggio di un report in un file CSV
-if st.button("Genera Report CSV"):
-    report = pd.DataFrame({"Reparto": reparti_selezionati, "Totale Economico": [totale_economico] * len(reparti_selezionati)})
-    report.to_csv("report.csv", index=False)
-    st.success("Report CSV generato con successo.")
+    if submit_button:
+        equipments[equip_id] = {"name": equip_name, "specialty": spec_id}
+        st.success(f"Apparecchiatura {equip_name} aggiunta con successo")
 
-# Salvataggio di un report in un file di testo
-if st.button("Genera Report Testo"):
-    with open("report.txt", "w") as file:
-        file.write(f"Totale Economico per {numero_reparti} reparti selezionati: € {totale_economico:.0f}\n")
-        file.write("Riassunto delle apparecchiature per categoria:\n")
-        for categoria, quantita in categorie_apparecchiature.items():
-            file.write(f"- {categoria}: Quantità totale: {quantita}, Totale Economico: € {quantita * totale_economico:.0f}\n")
-        file.write("Elenco delle apparecchiature tecniche:\n")
-        for categoria, elenco in elenco_apparecchiature_tecniche.items():
-            file.write(f"- {categoria}:\n")
-            for apparecchiatura in elenco:
-                file.write(f"  - {apparecchiatura}\n")
-    st.success("Report di testo generato con successo.")
+    if equipments:
+        st.subheader("Elenco Apparecchiature")
+        for equip_id, equip_info in equipments.items():
+            st.write(f"ID: {equip_id} - Nome: {equip_info['name']} - Specialità: {specialties[equip_info['specialty']]['name']}")
+
+if __name__ == '__main__':
+    main()
