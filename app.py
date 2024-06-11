@@ -185,11 +185,3 @@ def manage_equipments():
 
 if __name__ == '__main__':
     main()
-"""
-
-# Salviamo il codice in un file di testo
-file_path = "/mnt/data/streamlit_hospital_app.py"
-with open(file_path, "w") as file:
-    file.write(app_code)
-
-file_path
