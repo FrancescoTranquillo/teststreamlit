@@ -1,39 +1,105 @@
 import streamlit as st
 import sqlite3
+import pandas as pd
 
-# Funzioni di utilità per la gestione del database
-def init_db():
-    conn = sqlite3.connect('hospital.db')
-    c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS departments (id TEXT PRIMARY KEY, name TEXT)''')
-    c.execute('''CREATE TABLE IF NOT EXISTS units (id TEXT PRIMARY KEY, name TEXT, department_id TEXT)''')
-    c.execute('''CREATE TABLE IF NOT EXISTS specialties (id TEXT PRIMARY KEY, name TEXT, unit_id TEXT)''')
-    c.execute('''CREATE TABLE IF NOT EXISTS equipments (id TEXT PRIMARY KEY, name TEXT, specialty_id TEXT)''')
+# Database setup
+conn = sqlite3.connect('hospital.db')
+c = conn.cursor()
+
+# Create tables if they don't exist
+c.execute('''
+          CREATE TABLE IF NOT EXISTS departments
+          (id TEXT PRIMARY KEY, name TEXT)
+          ''')
+
+c.execute('''
+          CREATE TABLE IF NOT EXISTS units
+          (id TEXT PRIMARY KEY, name TEXT, department_id TEXT,
+          FOREIGN KEY(department_id) REFERENCES departments(id))
+          ''')
+
+c.execute('''
+          CREATE TABLE IF NOT EXISTS specialties
+          (id TEXT PRIMARY KEY, name TEXT, unit_id TEXT,
+          FOREIGN KEY(unit_id) REFERENCES units(id))
+          ''')
+
+c.execute('''
+          CREATE TABLE IF NOT EXISTS equipments
+          (id TEXT PRIMARY KEY, name TEXT, specialty_id TEXT, price REAL, quantity INTEGER,
+          FOREIGN KEY(specialty_id) REFERENCES specialties(id))
+          ''')
+
+conn.commit()
+
+# Functions to manage CRUD operations
+def add_department(id, name):
+    c.execute('INSERT INTO departments (id, name) VALUES (?, ?)', (id, name))
     conn.commit()
-    conn.close()
 
-def run_query(query, params=()):
-    conn = sqlite3.connect('hospital.db')
-    c = conn.cursor()
-    c.execute(query, params)
+def add_unit(id, name, department_id):
+    c.execute('INSERT INTO units (id, name, department_id) VALUES (?, ?, ?)', (id, name, department_id))
     conn.commit()
-    conn.close()
 
-def fetch_all(query):
-    conn = sqlite3.connect('hospital.db')
-    c = conn.cursor()
-    c.execute(query)
-    data = c.fetchall()
-    conn.close()
-    return data
+def add_specialty(id, name, unit_id):
+    c.execute('INSERT INTO specialties (id, name, unit_id) VALUES (?, ?, ?)', (id, name, unit_id))
+    conn.commit()
 
-# Inizializza il database
-init_db()
+def add_equipment(id, name, specialty_id, price, quantity):
+    c.execute('INSERT INTO equipments (id, name, specialty_id, price, quantity) VALUES (?, ?, ?, ?, ?)', (id, name, specialty_id, price, quantity))
+    conn.commit()
 
-# Funzione principale
+def update_department(id, name):
+    c.execute('UPDATE departments SET name = ? WHERE id = ?', (name, id))
+    conn.commit()
+
+def update_unit(id, name, department_id):
+    c.execute('UPDATE units SET name = ?, department_id = ? WHERE id = ?', (name, department_id, id))
+    conn.commit()
+
+def update_specialty(id, name, unit_id):
+    c.execute('UPDATE specialties SET name = ?, unit_id = ? WHERE id = ?', (name, unit_id, id))
+    conn.commit()
+
+def update_equipment(id, name, specialty_id, price, quantity):
+    c.execute('UPDATE equipments SET name = ?, specialty_id = ?, price = ?, quantity = ? WHERE id = ?', (name, specialty_id, price, quantity, id))
+    conn.commit()
+
+def delete_department(id):
+    c.execute('DELETE FROM departments WHERE id = ?', (id,))
+    conn.commit()
+
+def delete_unit(id):
+    c.execute('DELETE FROM units WHERE id = ?', (id,))
+    conn.commit()
+
+def delete_specialty(id):
+    c.execute('DELETE FROM specialties WHERE id = ?', (id,))
+    conn.commit()
+
+def delete_equipment(id):
+    c.execute('DELETE FROM equipments WHERE id = ?', (id,))
+    conn.commit()
+
+def get_departments():
+    c.execute('SELECT * FROM departments')
+    return c.fetchall()
+
+def get_units():
+    c.execute('SELECT * FROM units')
+    return c.fetchall()
+
+def get_specialties():
+    c.execute('SELECT * FROM specialties')
+    return c.fetchall()
+
+def get_equipments():
+    c.execute('SELECT * FROM equipments')
+    return c.fetchall()
+
 def main():
     st.title("Gestione Ospedale")
-    menu = ["Home", "Reparti", "Unità Operative", "Specialità", "Apparecchiature"]
+    menu = ["Home", "Reparti", "Unità Operative", "Specialità", "Apparecchiature", "Visualizza Configurazione"]
     choice = st.sidebar.selectbox("Menu", menu)
 
     if choice == "Home":
@@ -52,6 +118,9 @@ def main():
     elif choice == "Apparecchiature":
         manage_equipments()
 
+    elif choice == "Visualizza Configurazione":
+        view_configuration()
+
 def manage_departments():
     st.subheader("Gestione Reparti")
     with st.form(key='department_form'):
@@ -60,128 +129,114 @@ def manage_departments():
         submit_button = st.form_submit_button(label='Salva Reparto')
 
     if submit_button:
-        run_query('INSERT OR REPLACE INTO departments (id, name) VALUES (?, ?)', (dept_id, dept_name))
-        st.success(f"Reparto {dept_name} salvato con successo")
+        if dept_id in [d[0] for d in get_departments()]:
+            update_department(dept_id, dept_name)
+            st.success(f"Reparto {dept_name} aggiornato con successo")
+        else:
+            add_department(dept_id, dept_name)
+            st.success(f"Reparto {dept_name} aggiunto con successo")
 
-    departments = fetch_all('SELECT * FROM departments')
-    if departments:
+    if get_departments():
         st.subheader("Elenco Reparti")
-        for dept_id, dept_name in departments:
+        for dept_id, dept_name in get_departments():
             st.write(f"ID: {dept_id} - Nome: {dept_name}")
-            if st.button(f"Modifica {dept_id}"):
-                with st.form(key=f'department_edit_form_{dept_id}'):
-                    new_dept_name = st.text_input("Nome Reparto", value=dept_name)
-                    update_button = st.form_submit_button(label='Aggiorna Reparto')
-                if update_button:
-                    run_query('UPDATE departments SET name = ? WHERE id = ?', (new_dept_name, dept_id))
-                    st.success(f"Reparto {dept_id} aggiornato con successo")
-                    st.experimental_rerun()
-            if st.button(f"Elimina {dept_id}"):
-                run_query('DELETE FROM departments WHERE id = ?', (dept_id,))
-                st.success(f"Reparto {dept_id} eliminato con successo")
-                st.experimental_rerun()
+            if st.button(f"Elimina {dept_name}", key=f"del_dept_{dept_id}"):
+                delete_department(dept_id)
+                st.success(f"Reparto {dept_name} eliminato con successo")
 
 def manage_units():
     st.subheader("Gestione Unità Operative")
-    departments = fetch_all('SELECT * FROM departments')
-    dept_options = {dept_id: dept_name for dept_id, dept_name in departments}
-
     with st.form(key='unit_form'):
         unit_id = st.text_input("ID Unità Operativa")
         unit_name = st.text_input("Nome Unità Operativa")
-        dept_id = st.selectbox("Seleziona Reparto", list(dept_options.keys()), format_func=lambda x: dept_options[x])
+        dept_id = st.selectbox("Seleziona Reparto", [d[0] for d in get_departments()])
         submit_button = st.form_submit_button(label='Salva Unità Operativa')
 
     if submit_button:
-        run_query('INSERT OR REPLACE INTO units (id, name, department_id) VALUES (?, ?, ?)', (unit_id, unit_name, dept_id))
-        st.success(f"Unità Operativa {unit_name} salvata con successo")
+        if unit_id in [u[0] for u in get_units()]:
+            update_unit(unit_id, unit_name, dept_id)
+            st.success(f"Unità Operativa {unit_name} aggiornata con successo")
+        else:
+            add_unit(unit_id, unit_name, dept_id)
+            st.success(f"Unità Operativa {unit_name} aggiunta con successo")
 
-    units = fetch_all('SELECT * FROM units')
-    if units:
+    if get_units():
         st.subheader("Elenco Unità Operative")
-        for unit_id, unit_name, dept_id in units:
-            st.write(f"ID: {unit_id} - Nome: {unit_name} - Reparto: {dept_options[dept_id]}")
-            if st.button(f"Modifica {unit_id}"):
-                with st.form(key=f'unit_edit_form_{unit_id}'):
-                    new_unit_name = st.text_input("Nome Unità Operativa", value=unit_name)
-                    new_dept_id = st.selectbox("Seleziona Reparto", list(dept_options.keys()), index=list(dept_options.keys()).index(dept_id), format_func=lambda x: dept_options[x])
-                    update_button = st.form_submit_button(label='Aggiorna Unità Operativa')
-                if update_button:
-                    run_query('UPDATE units SET name = ?, department_id = ? WHERE id = ?', (new_unit_name, new_dept_id, unit_id))
-                    st.success(f"Unità Operativa {unit_id} aggiornata con successo")
-                    st.experimental_rerun()
-            if st.button(f"Elimina {unit_id}"):
-                run_query('DELETE FROM units WHERE id = ?', (unit_id,))
-                st.success(f"Unità Operativa {unit_id} eliminata con successo")
-                st.experimental_rerun()
+        for unit_id, unit_name, dept_id in get_units():
+            st.write(f"ID: {unit_id} - Nome: {unit_name} - Reparto: {dept_id}")
+            if st.button(f"Elimina {unit_name}", key=f"del_unit_{unit_id}"):
+                delete_unit(unit_id)
+                st.success(f"Unità Operativa {unit_name} eliminata con successo")
 
 def manage_specialties():
     st.subheader("Gestione Specialità")
-    units = fetch_all('SELECT * FROM units')
-    unit_options = {unit_id: unit_name for unit_id, unit_name, dept_id in units}
-
     with st.form(key='specialty_form'):
         spec_id = st.text_input("ID Specialità")
         spec_name = st.text_input("Nome Specialità")
-        unit_id = st.selectbox("Seleziona Unità Operativa", list(unit_options.keys()), format_func=lambda x: unit_options[x])
+        unit_id = st.selectbox("Seleziona Unità Operativa", [u[0] for u in get_units()])
         submit_button = st.form_submit_button(label='Salva Specialità')
 
     if submit_button:
-        run_query('INSERT OR REPLACE INTO specialties (id, name, unit_id) VALUES (?, ?, ?)', (spec_id, spec_name, unit_id))
-        st.success(f"Specialità {spec_name} salvata con successo")
+        if spec_id in [s[0] for s in get_specialties()]:
+            update_specialty(spec_id, spec_name, unit_id)
+            st.success(f"Specialità {spec_name} aggiornata con successo")
+        else:
+            add_specialty(spec_id, spec_name, unit_id)
+            st.success(f"Specialità {spec_name} aggiunta con successo")
 
-    specialties = fetch_all('SELECT * FROM specialties')
-    if specialties:
+    if get_specialties():
         st.subheader("Elenco Specialità")
-        for spec_id, spec_name, unit_id in specialties:
-            st.write(f"ID: {spec_id} - Nome: {spec_name} - Unità Operativa: {unit_options[unit_id]}")
-            if st.button(f"Modifica {spec_id}"):
-                with st.form(key=f'specialty_edit_form_{spec_id}'):
-                    new_spec_name = st.text_input("Nome Specialità", value=spec_name)
-                    new_unit_id = st.selectbox("Seleziona Unità Operativa", list(unit_options.keys()), index=list(unit_options.keys()).index(unit_id), format_func=lambda x: unit_options[x])
-                    update_button = st.form_submit_button(label='Aggiorna Specialità')
-                if update_button:
-                    run_query('UPDATE specialties SET name = ?, unit_id = ? WHERE id = ?', (new_spec_name, new_unit_id, spec_id))
-                    st.success(f"Specialità {spec_id} aggiornata con successo")
-                    st.experimental_rerun()
-            if st.button(f"Elimina {spec_id}"):
-                run_query('DELETE FROM specialties WHERE id = ?', (spec_id,))
-                st.success(f"Specialità {spec_id} eliminata con successo")
-                st.experimental_rerun()
+        for spec_id, spec_name, unit_id in get_specialties():
+            st.write(f"ID: {spec_id} - Nome: {spec_name} - Unità Operativa: {unit_id}")
+            if st.button(f"Elimina {spec_name}", key=f"del_spec_{spec_id}"):
+                delete_specialty(spec_id)
+                st.success(f"Specialità {spec_name} eliminata con successo")
 
 def manage_equipments():
     st.subheader("Gestione Apparecchiature")
-    specialties = fetch_all('SELECT * FROM specialties')
-    spec_options = {spec_id: spec_name for spec_id, spec_name, unit_id in specialties}
-
     with st.form(key='equipment_form'):
         equip_id = st.text_input("ID Apparecchiatura")
         equip_name = st.text_input("Nome Apparecchiatura")
-        spec_id = st.selectbox("Seleziona Specialità", list(spec_options.keys()), format_func=lambda x: spec_options[x])
+        spec_id = st.selectbox("Seleziona Specialità", [s[0] for s in get_specialties()])
+        price = st.number_input("Prezzo", min_value=0.0, format="%.2f")
+        quantity = st.number_input("Quantità", min_value=0)
         submit_button = st.form_submit_button(label='Salva Apparecchiatura')
 
     if submit_button:
-        run_query('INSERT OR REPLACE INTO equipments (id, name, specialty_id) VALUES (?, ?, ?)', (equip_id, equip_name, spec_id))
-        st.success(f"Apparecchiatura {equip_name} salvata con successo")
+        if equip_id in [e[0] for e in get_equipments()]:
+            update_equipment(equip_id, equip_name, spec_id, price, quantity)
+            st.success(f"Apparecchiatura {equip_name} aggiornata con successo")
+        else:
+            add_equipment(equip_id, equip_name, spec_id, price, quantity)
+            st.success(f"Apparecchiatura {equip_name} aggiunta con successo")
 
-    equipments = fetch_all('SELECT * FROM equipments')
-    if equipments:
+    if get_equipments():
         st.subheader("Elenco Apparecchiature")
-        for equip_id, equip_name, spec_id in equipments:
-            st.write(f"ID: {equip_id} - Nome: {equip_name} - Specialità: {spec_options[spec_id]}")
-            if st.button(f"Modifica {equip_id}"):
-                with st.form(key=f'equipment_edit_form_{equip_id}'):
-                    new_equip_name = st.text_input("Nome Apparecchiatura", value=equip_name)
-                    new_spec_id = st.selectbox("Seleziona Specialità", list(spec_options.keys()), index=list(spec_options.keys()).index(spec_id), format_func=lambda x: spec_options[x])
-                    update_button = st.form_submit_button(label='Aggiorna Apparecchiatura')
-                if update_button:
-                    run_query('UPDATE equipments SET name = ?, specialty_id = ? WHERE id = ?', (new_equip_name, new_spec_id, equip_id))
-                    st.success(f"Apparecchiatura {equip_id} aggiornata con successo")
-                    st.experimental_rerun()
-            if st.button(f"Elimina {equip_id}"):
-                run_query('DELETE FROM equipments WHERE id = ?', (equip_id,))
-                st.success(f"Apparecchiatura {equip_id} eliminata con successo")
-                st.experimental_rerun()
+        for equip_id, equip_name, spec_id, price, quantity in get_equipments():
+            st.write(f"ID: {equip_id} - Nome: {equip_name} - Specialità: {spec_id} - Prezzo: {price} - Quantità: {quantity}")
+            if st.button(f"Elimina {equip_name}", key=f"del_equip_{equip_id}"):
+                delete_equipment(equip_id)
+                st.success(f"Apparecchiatura {equip_name} eliminata con successo")
+
+def view_configuration():
+    st.subheader("Configurazione Ospedale")
+    
+    departments = pd.DataFrame(get_departments(), columns=["ID Reparto", "Nome Reparto"])
+    units = pd.DataFrame(get_units(), columns=["ID Unità Operativa", "Nome Unità Operativa", "ID Reparto"])
+    specialties = pd.DataFrame(get_specialties(), columns=["ID Specialità", "Nome Specialità", "ID Unità Operativa"])
+    equipments = pd.DataFrame(get_equipments(), columns=["ID Apparecchiatura", "Nome Apparecchiatura", "ID Specialità", "Prezzo", "Quantità"])
+
+    st.write("## Reparti")
+    st.table(departments)
+    
+    st.write("## Unità Operative")
+    st.table(units)
+    
+    st.write("## Specialità")
+    st.table(specialties)
+    
+    st.write("## Apparecchiature")
+    st.table(equipments)
 
 if __name__ == '__main__':
     main()
