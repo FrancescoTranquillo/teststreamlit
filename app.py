@@ -31,7 +31,15 @@ uploaded_file = st.file_uploader("Carica un file CSV", type="csv")
 
 if uploaded_file is not None:
     try:
-        df = pd.read_csv(uploaded_file, encoding='ISO-8859-1')
+        df = pd.read_csv(uploaded_file, encoding='utf-8', delimiter=',', error_bad_lines=False)
+    except UnicodeDecodeError:
+        try:
+            df = pd.read_csv(uploaded_file, encoding='ISO-8859-1', delimiter=',', error_bad_lines=False)
+        except Exception as e:
+            st.error(f"Errore durante la lettura del file: {e}")
+        else:
+            st.write("Ecco i dati caricati:")
+            st.dataframe(df)
     except Exception as e:
         st.error(f"Errore durante la lettura del file: {e}")
     else:
