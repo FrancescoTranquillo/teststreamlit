@@ -6,6 +6,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.metrics import accuracy_score
 import joblib
+import os
 
 # Funzione per addestrare il modello
 def train_model(data, text_column, label_column):
@@ -44,13 +45,18 @@ if uploaded_file is not None:
             st.success(f"Modello addestrato con successo! Precisione: {accuracy:.2f}")
     
     # Caricare il modello addestrato
-    model = joblib.load('text_classifier_model.pkl')
+    if os.path.exists('text_classifier_model.pkl'):
+        model = joblib.load('text_classifier_model.pkl')
 
-    # Applicare il modello ai dati e creare il file Excel in uscita
-    if st.button("Categorizza i testi"):
-        with st.spinner("Categorizzazione dei testi in corso..."):
-            df['Predicted_Category'] = categorize_texts(model, df[text_column])
-            output_file = "categorized_texts.xlsx"
-            df.to_excel(output_file, index=False)
-            st.success(f"Testi categorizzati con successo! Scarica il file {output_file} qui sotto:")
-            st.download_button("Scarica il file Excel", data=output_file)
+        # Applicare il modello ai dati e creare il file Excel in uscita
+        if st.button("Categorizza i testi"):
+            with st.spinner("Categorizzazione dei testi in corso..."):
+                df['Predicted_Category'] = categorize_texts(model, df[text_column])
+                output_file = "categorized_texts.xlsx"
+                df.to_excel(output_file, index=False)
+                st.success(f"Testi categorizzati con successo! Scarica il file {output_file} qui sotto:")
+                with open(output_file, "rb") as file:
+                    st.download_button("Scarica il file Excel", data=file, file_name=output_file)
+    else:
+        st.warning("Il modello non è stato addestrato. Per favore addestra il modello prima di categorizzare i testi.")
+
