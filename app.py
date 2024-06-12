@@ -1,3 +1,5 @@
+pip install streamlit pandas scikit-learn openpyxl
+
 import streamlit as st
 import pandas as pd
 from sklearn.model_selection import train_test_split
