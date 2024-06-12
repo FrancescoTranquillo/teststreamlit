@@ -1,4 +1,3 @@
-pip install streamlit pandas scikit-learn openpyxl
 
 import streamlit as st
 import pandas as pd
