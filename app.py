@@ -26,11 +26,11 @@ def train_model(data, text_column, label_column):
 def categorize_texts(model, texts):
     return model.predict(texts)
 
-# Caricare il file Excel
-uploaded_file = st.file_uploader("Carica un file Excel", type="xlsx")
+# Caricare il file CSV
+uploaded_file = st.file_uploader("Carica un file CSV", type="csv")
 
 if uploaded_file is not None:
-    df = pd.read_excel(uploaded_file)
+    df = pd.read_csv(uploaded_file)
     st.write("Ecco i dati caricati:")
     st.dataframe(df)
 
@@ -48,14 +48,14 @@ if uploaded_file is not None:
     if os.path.exists('text_classifier_model.pkl'):
         model = joblib.load('text_classifier_model.pkl')
 
-        # Applicare il modello ai dati e creare il file Excel in uscita
+        # Applicare il modello ai dati e creare il file CSV in uscita
         if st.button("Categorizza i testi"):
             with st.spinner("Categorizzazione dei testi in corso..."):
                 df['Predicted_Category'] = categorize_texts(model, df[text_column])
-                output_file = "categorized_texts.xlsx"
-                df.to_excel(output_file, index=False)
+                output_file = "categorized_texts.csv"
+                df.to_csv(output_file, index=False)
                 st.success(f"Testi categorizzati con successo! Scarica il file {output_file} qui sotto:")
                 with open(output_file, "rb") as file:
-                    st.download_button("Scarica il file Excel", data=file, file_name=output_file)
+                    st.download_button("Scarica il file CSV", data=file, file_name=output_file)
     else:
         st.warning("Il modello non è stato addestrato. Per favore addestra il modello prima di categorizzare i testi.")
