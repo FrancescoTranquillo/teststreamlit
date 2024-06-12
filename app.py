@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -60,4 +59,3 @@ if uploaded_file is not None:
                     st.download_button("Scarica il file Excel", data=file, file_name=output_file)
     else:
         st.warning("Il modello non è stato addestrato. Per favore addestra il modello prima di categorizzare i testi.")
-
